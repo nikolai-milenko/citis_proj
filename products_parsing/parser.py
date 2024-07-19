@@ -106,14 +106,16 @@ def get_products_info(product_websites: List[Dict]) -> List[Dict]:
                     print(f'Находимся на странице с листингом товаров.')
                     # находимся на странице с листингом товаров
                     products_links = product_soup.select(website_info[0])
+                    results_from_website_cnt = 0
                     for product in products_links:
+                        results_from_website_cnt += 1
                         match = re.search(website["domain_name"], product['href'])
                         if match:
-                            products_data.extend(
+                            products_data.append(
                                 parse_product(f'{product["href"]}', website_info))
                         else:
                             products_data.append(parse_product(f'https://{website["domain_name"]}{product["href"]}', website_info))
-                        if len(products_data) >= max_results_from_website:
+                        if results_from_website_cnt >= max_results_from_website:
                             break
                     print(f'Собрали инфу о продуктах: {products_data}')
                 else:
@@ -186,7 +188,7 @@ def parse_reviews(reviews_url, product_data: Dict, website_params) -> List[Dict]
     print(reviews_url)
     reviews = []
     comments = soup.select(website_params[1]['review_comment'])
-    print(f'Комментарии: {comments}')
+    # print(f'Комментарии: {comments}')
     for review_comment in comments:
         reviews.append({'review': review_comment.text})
 
