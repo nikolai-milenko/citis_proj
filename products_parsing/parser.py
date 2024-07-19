@@ -30,7 +30,7 @@ def get_html_content_selenium(url: str):
     driver = webdriver.Chrome(service=service, options=options)
     url_with_params = f"{url}?{urlencode(params)}"
     driver.get(url_with_params)
-    time.sleep(7)
+    time.sleep(10)
     # Не менять, иногда сайты загружаются долго, например, мвидео, на ходу контент сует в html, т.к. написан с ajax
     html = driver.page_source
     driver.quit()
