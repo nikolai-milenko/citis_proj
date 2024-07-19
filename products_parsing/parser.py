@@ -19,7 +19,7 @@ params = {
 
 # Настройка Selenium WebDriver
 options = webdriver.ChromeOptions()
-options.add_argument('--headless')
+# options.add_argument('--headless')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 
@@ -30,7 +30,8 @@ def get_html_content_selenium(url: str):
     driver = webdriver.Chrome(service=service, options=options)
     url_with_params = f"{url}?{urlencode(params)}"
     driver.get(url_with_params)
-    time.sleep(5)  # Задержка 5 секунд
+    time.sleep(7)
+    # Не менять, иногда сайты загружаются долго, например, мвидео, на ходу контент сует в html, т.к. написан с ajax
     html = driver.page_source
     driver.quit()
     return html
@@ -98,18 +99,26 @@ def get_products_info(product_websites: List[Dict]) -> List[Dict]:
 
                 website_info = websites_css_selectors[website['domain_name']]
                 print(f'Информация о веб-сайте с доменным именем {website["domain_name"]}: {website_info}')
-                print(product_soup)
+                # print(product_soup)
                 print(product_soup.select(website_info[0]))
                 # определяем, находимся ли мы уже на странице товара или еще только на странице с листингом товаров
-                if not product_soup.select(website_info[1]['price']):
+                if not product_soup.select(website_info[1]['price']) or not product_soup.select(website_info[1]['reviews'] or not product_soup.select(website_info[1]['rating'])):
                     print(f'Находимся на странице с листингом товаров.')
                     # находимся на странице с листингом товаров
                     products_links = product_soup.select(website_info[0])
                     for product in products_links:
-                        products_data.extend(parse_product(f'https://{website["domain_name"]}{product["href"]}', website_info))
+                        match = re.search(website["domain_name"], product['href'])
+                        if match:
+                            products_data.extend(
+                                parse_product(f'{product["href"]}', website_info))
+                        else:
+                            products_data.append(parse_product(f'https://{website["domain_name"]}{product["href"]}', website_info))
+                        if len(products_data) >= max_results_from_website:
+                            break
+                    print(f'Собрали инфу о продуктах: {products_data}')
                 else:
                     print('Находимся на странице конкретного товара')
-                    products_data.extend(parse_product(website['url'], website_info))
+                    products_data.append(parse_product(website['url'], website_info))
             else:
                 print(f'Для сайта с доменным именем {website["domain_name"]} НЕ НАШЛОСЬ селекторов!')
                 continue
@@ -125,20 +134,22 @@ def parse_product(product_url, website_params) -> Dict:
     html_text = get_html_content_selenium(product_url)
     soup = BeautifulSoup(html_text, 'lxml')
 
+    print('got product html')
     product_name = soup.select(website_params[1]['name'])
     if len(product_name) != 1:
         product_name = ['']
     else:
         product_name = [product_name[0].text]
-
+    print('got product name')
     product_price = soup.select(website_params[1]['price'])
     if len(product_price) != 1:
         product_price = ['']
     else:
-        product_price = [product_price[0].text]
-
+        product_price = [re.sub(r'\D', '', product_price[0].text)]
+    print('got product price')
     product_rating = soup.select(website_params[1]['rating'])
     if len(product_rating) != 1:
+        product_rating.append('')
         product_rating = [product_rating[0]]
     elif get_domain_name(product_url) == 'www.dns-shop.ru':
         product_rating = [product_rating[0].get('data-rating')]
@@ -146,7 +157,7 @@ def parse_product(product_url, website_params) -> Dict:
         product_rating = [product_rating[0].get('value')]
     else:
         product_rating = [product_rating[0].text]
-
+    print('got product rating')
     print(product_name, product_price, product_rating)
     product_data = {
         'name': product_name[0],
@@ -155,9 +166,13 @@ def parse_product(product_url, website_params) -> Dict:
     }
 
     reviews_url = soup.select_one(website_params[1]['reviews'])
-    product_data['reviews'] = parse_reviews(f'https://{get_domain_name(product_url)}{reviews_url["href"]}', product_data, website_params)
+    if reviews_url is None:
+        print('Ссылки на отзывы не нашли, видимо отзывов нет...')
+        product_data['reviews'] = []
+    else:
+        product_data['reviews'] = parse_reviews(f'https://{get_domain_name(product_url)}{reviews_url["href"]}', product_data, website_params)
 
-    print(f'Собрали данные о продукте: {product_data}')
+    # print(f'Собрали данные о продукте: {product_data}')
 
     return product_data
 
@@ -176,7 +191,7 @@ def parse_reviews(reviews_url, product_data: Dict, website_params) -> List[Dict]
 
     _ = 0
     for review_rating in soup.select(website_params[1]['review_rating']):
-        reviews[_]['rating'] = review_rating
+        reviews[_]['review_rating'] = review_rating.text
         _ += 1
         if _ == len(reviews):
             break
@@ -229,4 +244,4 @@ def parse(query):
 
 
 # Пример использования
-parse("купить микроволновку")
+parse("купить тостер")
