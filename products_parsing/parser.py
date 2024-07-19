@@ -57,16 +57,20 @@ def collect_search_result(search_url: str, product_websites) -> List[Dict]:
     html_text = get_html_content_selenium(search_url)
     soup = BeautifulSoup(html_text, 'lxml')
 
+    _ = 0
     for result in soup.select('.tF2Cxc'):
         title = result.select_one('.DKV0Md').text
         link = result.select_one('.yuRUbf a')['href']
+        _ += 1
         if any([re.search(marketplace, link) for marketplace in marketplaces]):
             print(f'Нашелся маркетплейс: {title}, {link}')
+            _ -= 1
             continue
 
         domain_name = get_domain_name(link)
         if any([re.search(domain_name, get_domain_name(new_product['url'])) for new_product in product_websites]):
             print(f'Нашелся уже добавленный сайт: {domain_name}')
+            _ -= 1
             continue
 
         product_websites.append({'title': title, 'url': link, 'domain_name': domain_name})
@@ -74,6 +78,8 @@ def collect_search_result(search_url: str, product_websites) -> List[Dict]:
         print('Ожидание перед проверкой следующей страницы 5 с.')
         time.sleep(5)  # Ждём перед запросом следующей страницы
         print('Конец ожидания.')
+        if _ == max_websites_count:
+            break
 
     print(f'\nДля этой страницы поиска сайты собраны! Всего собрано: {len(product_websites)}')
 
@@ -153,14 +159,15 @@ def parse_product(product_url, website_params) -> Dict:
     if len(product_rating) != 1:
         product_rating.append('')
         product_rating = [product_rating[0]]
-    elif get_domain_name(product_url) == 'www.dns-shop.ru':
-        product_rating = [product_rating[0].get('data-rating')]
+    if get_domain_name(product_url) == 'www.dns-shop.ru':
+        product_rating = [product_rating[0]['data-rating']]
     elif get_domain_name(product_url) == 'www.vseinstrumenti.ru':
-        product_rating = [product_rating[0].get('value')]
+        product_tag = product_rating[0]
+        product_rating = [product_tag['value']]
     else:
         product_rating = [product_rating[0].text]
     print('got product rating')
-    print(product_name, product_price, product_rating)
+    # print(product_name, product_price, product_rating)
     product_data = {
         'url': product_url,
         'name': product_name[0],
@@ -185,18 +192,26 @@ def parse_reviews(reviews_url, product_data: Dict, website_params) -> List[Dict]
     soup = BeautifulSoup(html_text, 'lxml')
 
     print("Теперь парсим отзывы для этого сайта.")
-    print(reviews_url)
+    # print(reviews_url)
     reviews = []
     comments = soup.select(website_params[1]['review_comment'])
-    # print(f'Комментарии: {comments}')
+    print(f"Ищем по селектору: {website_params[1]['review_comment']}")
+    print(f'Комментарии: {comments}')
     for review_comment in comments:
         reviews.append({'review': review_comment.text})
 
     print(f'Всего отзывов: {len(reviews)}')
 
     _ = 0
-    for review_rating in soup.select(website_params[1]['review_rating']):
-        reviews[_]['review_rating'] = review_rating.text
+    review_ratings = soup.select(website_params[1]['review_rating'])
+
+    if get_domain_name(reviews_url) == 'ru-mi.com':
+        review_ratings = [rating.get('data-rating') for rating in review_ratings]
+    else:
+        review_ratings = [rating.text for rating in review_ratings]
+
+    for review_rating in review_ratings:
+        reviews[_]['review_rating'] = review_rating
         _ += 1
         if _ == len(reviews):
             break
@@ -206,7 +221,7 @@ def parse_reviews(reviews_url, product_data: Dict, website_params) -> List[Dict]
 
 def collect_products_info(search_url: str) -> Tuple[List[Dict], List[Dict]]:
     product_websites = []
-    while len(product_websites) < min_websites_count:
+    while len(product_websites) < max_websites_count:
         print(f'Поиск на странице google: {params["start"] // 10 + 1}')
         product_websites = collect_search_result(search_url, product_websites)  # сейвим результаты поиска в google
         params['start'] += 10
