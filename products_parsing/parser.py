@@ -160,6 +160,7 @@ def parse_product(product_url, website_params) -> Dict:
     print('got product rating')
     print(product_name, product_price, product_rating)
     product_data = {
+        'url': product_url,
         'name': product_name[0],
         'price': product_price[0],
         'rating': product_rating[0],
@@ -184,7 +185,9 @@ def parse_reviews(reviews_url, product_data: Dict, website_params) -> List[Dict]
     print("Теперь парсим отзывы для этого сайта.")
     print(reviews_url)
     reviews = []
-    for review_comment in soup.select(website_params[1]['review_comment']):
+    comments = soup.select(website_params[1]['review_comment'])
+    print(f'Комментарии: {comments}')
+    for review_comment in comments:
         reviews.append({'review': review_comment.text})
 
     print(f'Всего отзывов: {len(reviews)}')
