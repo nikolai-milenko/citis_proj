@@ -77,7 +77,6 @@ def collect_search_result(search_url: str, product_websites) -> List[Dict]:
         print(f'Нашелся сайт который будем парсить! {domain_name}')
         print('Ожидание перед проверкой следующей страницы 5 с.')
         time.sleep(5)  # Ждём перед запросом следующей страницы
-        print('Конец ожидания.')
         if _ == max_websites_count:
             break
 
@@ -104,9 +103,9 @@ def get_products_info(product_websites: List[Dict]) -> List[Dict]:
                 time.sleep(5)
 
                 website_info = websites_css_selectors[website['domain_name']]
-                print(f'Информация о веб-сайте с доменным именем {website["domain_name"]}: {website_info}')
+                # print(f'Информация о веб-сайте с доменным именем {website["domain_name"]}: {website_info}')
                 # print(product_soup)
-                print(product_soup.select(website_info[0]))
+                # print(product_soup.select(website_info[0]))
                 # определяем, находимся ли мы уже на странице товара или еще только на странице с листингом товаров
                 if not product_soup.select(website_info[1]['price']) or not product_soup.select(website_info[1]['reviews'] or not product_soup.select(website_info[1]['rating'])):
                     print(f'Находимся на странице с листингом товаров.')
@@ -165,7 +164,11 @@ def parse_product(product_url, website_params) -> Dict:
         product_tag = product_rating[0]
         product_rating = [product_tag['value']]
     else:
-        product_rating = [product_rating[0].text]
+        try:
+            product_rating = [product_rating[0].text]
+        except AttributeError:
+            pass
+
     print('got product rating')
     # print(product_name, product_price, product_rating)
     product_data = {
@@ -264,4 +267,4 @@ def parse(query):
 
 
 # Пример использования
-parse("купить тостер")
+parse("купить тостер мвидео")
