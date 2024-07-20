@@ -1,5 +1,4 @@
 from better_profanity import profanity
-import re
 
 def validate_search_query(query):
     # Проверяем, что запрос не пустой

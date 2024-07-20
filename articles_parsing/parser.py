@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import nltk
+from usecase.blacklist.add_hit import add_hit
 
 nltk.download('punkt')
 
@@ -57,10 +58,11 @@ def combine_relevant_texts(text_blocks):
 
 def parse_article(url):
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=2)
         response.raise_for_status()
     except requests.Timeout:
         print(f"Timeout error for URL: {url}")
+        add_hit('localhost:8082', url)
         return None
     except requests.RequestException as e:
         print(f"Error fetching the URL: {e}")
