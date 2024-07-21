@@ -1,0 +1,50 @@
+www.citilink.ru: 70 +
+www.vseinstrumenti.ru: 61 +
+www.bork.ru: 31 -
+www.technopark.ru: 27 -
+lemanapro.ru: 24
+ru-mi.com: 22  +
+www.rbt.ru: 20
+shop-polaris.ru: 15
+hoff.ru: 11
+www.holodilnik.ru: 11
+www.rusklimat.ru: 11
+neptun66.ru: 11
+babyliss-pro.ru: 11
+www.kp.ru: 11
+braun-russia.ru: 11
+doctorslon.ru: 11
+bq.ru: 10
+www.maunfeld.ru: 9
+kitfort.ru: 9
+cityclimate24.ru: 9
+irobot.ru: 8
+www.ballu.ru: 8
+www.mir-vozduha.ru: 8
+vitek.ru: 8
+home-flame.ru: 8
+kamindom.ru: 8
+www.kuvalda.ru: 8
+resanta.ru: 7
+dysons-shop.ru: 7
+moserrussia.ru: 7
+krona.ru: 6
+www.techport.ru: 6
+www.avito.ru: 6
+caseguru.ru: 6
+mircli.ru: 6
+aliexpress.ru: 6
+goldapple.ru: 6
+www.ga-ma.ru: 6
+cloudhair.ru: 6
+harizma-professional.ru: 6
+www.auchan.ru: 6
+wahl-russia.ru: 6
+www.yamaguchi.ru: 6
+picooc.ru: 6
+www.irrigator.ru: 6
+www.weissgauff.ru: 5
+www.panasonic.com: 5
+multivarka.pro: 5
+www.youtube.com: 5
+www.atmostech.ru: 5

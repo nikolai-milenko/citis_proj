@@ -1,0 +1,6 @@
+server:
+  port: 8080
+  host: localhost
+max_hits: 5
+dbhost: 'localhost:8082'
+analyticsHost: 'localhost:8083'
