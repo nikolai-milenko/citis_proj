@@ -81,6 +81,8 @@ dbhost: 'localhost:8082'
 
 analyticsHost: 'localhost:8083'
 
+update_interval: 120
+
 server:
-  host: 'localhost'
+  host: '0.0.0.0'
   port: 8081

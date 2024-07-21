@@ -11,14 +11,14 @@ func (i *Implementation) AddHit(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest) // TODO нормальный хендлер ошибок
+		w.WriteHeader(http.StatusBadRequest)
 		_ = json.NewEncoder(w).Encode(add_hit.AddHitResponse{Error: err.Error()})
 		return
 	}
 
 	err = i.manager.AddHit(r.Context(), req.URL)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError) // TODO нормальный хендлер ошибок
+		w.WriteHeader(http.StatusInternalServerError)
 		_ = json.NewEncoder(w).Encode(add_hit.AddHitResponse{Error: err.Error()})
 		return
 	}

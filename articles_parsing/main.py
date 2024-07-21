@@ -12,7 +12,7 @@ def main():
 
     cfg = Config(config_path)
 
-    run(cfg.get_server_host(), cfg.get_server_port(), debug=True)
+    run(cfg.get_server_host(), cfg.get_server_port(), cfg)
 
 if __name__ == '__main__':
     main()

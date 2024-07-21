@@ -24,8 +24,11 @@ class Config:
     def get_database_port(self):
         return self.get('database', 'port', 3306)
 
-    def get_database_username(self):
-        return self.get('database', 'username', 'user')
+    def get_db_host(self):
+        return self.config.get('dbhost', '')
 
-    def get_database_password(self):
-        return self.get('database', 'password', 'pass')
+    def get_max_hits(self):
+        return self.config.get('max_hits', 10)
+
+    def get_analytics_host(self):
+        return self.config.get('analyticsHost', '')

@@ -8,7 +8,7 @@ import re
 
 
 def get_google_search_results(query, pages=10, time_filter='m'):  # 'm' for month
-    query += " статья"
+    query += " информационная текстовая статья"
     query = query.replace(' ', '+')
     base_url = f"https://www.google.com/search?q={query}&tbs=qdr:{time_filter}"
     headers = {
@@ -28,7 +28,7 @@ def get_google_search_results(query, pages=10, time_filter='m'):  # 'm' for mont
                 anchors = g.find_all('a')
                 if anchors:
                     link = anchors[0]['href']
-                    search_results.add(link)  # todo проверка что все страницы просмотрены
+                    search_results.add(link)
 
             # Проверяем наличие ссылки на следующую страницу
         else:

@@ -12,14 +12,14 @@ func (i *Implementation) GetURLInfo(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest) // TODO нормальный хендлер ошибок
+		w.WriteHeader(http.StatusBadRequest)
 		_ = json.NewEncoder(w).Encode(get_url_info.GetURLInfoResponse{Error: err.Error()})
 		return
 	}
 
 	res, err := i.manager.GetURLInfo(r.Context(), req.URL)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError) // TODO нормальный хендлер ошибок
+		w.WriteHeader(http.StatusInternalServerError)
 		_ = json.NewEncoder(w).Encode(get_url_info.GetURLInfoResponse{Error: err.Error()})
 		return
 	}

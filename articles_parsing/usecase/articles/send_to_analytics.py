@@ -3,11 +3,9 @@ import json
 from articles_parsing.usecase.blacklist.add_hit import add_hit
 
 
-def send_to_analytics(host, articles):
-    url = f"http://{host}/analyze_articles"
+def send_to_analytics(analytics_host, repo_host, articles):
+    url = f"http://{analytics_host}/analyze_articles"
     headers = {'Content-Type': 'application/json'}
-
-    repoURL = "localhost:8082"
 
     # Формируем данные для отправки
     data = {
@@ -27,14 +25,13 @@ def send_to_analytics(host, articles):
         if isinstance(response_data, list):
             print("Received URLs:", response_data)
             for url in response_data:
-                add_hit(repoURL, url)
+                add_hit(repo_host, url)
+
         else:
             print("Unexpected response format:", response_data)
 
-    except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP error occurred: {http_err}")
-    except Exception as err:
-        print(f"Other error occurred: {err}")
+    except:
+        print("Не удалось отправить данные аналитике")
 
 
 # Пример использования функции

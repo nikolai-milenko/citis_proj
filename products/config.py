@@ -51,3 +51,6 @@ class Config:
 
     def get_analytics_host(self):
         return self.config.get('analyticsHost', '')
+
+    def get_update_interval(self):
+        return self.config.get('update_interval', 120)
