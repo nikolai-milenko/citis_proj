@@ -1,11 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
-from usecase.blacklist.is_banned import is_banned
-
-import time
-import re
-
+from is_banned import is_banned
+from delete_article import delete_article
 
 def get_google_search_results(query, pages=10, time_filter='m'):  # 'm' for month
     query += " информационная текстовая статья"
@@ -44,7 +41,7 @@ def get_links(repository_host, query, max_hits):
     for link in links:
         res = is_banned(repository_host, link, max_hits)
         if res:
-            link.delete(link)
+            delete_article(repository_host, link)
 
     return links
 

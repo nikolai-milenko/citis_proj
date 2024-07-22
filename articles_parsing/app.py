@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
 
-from articles_parsing.swagger import articles_ns, articles_query_model, empty_response_model, error_model
+from swagger import articles_query_model, empty_response_model, error_model
 from parser import parse_article
 from links_getter import get_links
-import usecase.articles.save_articles as uc
-from flask_restx import Resource, Namespace
+import save_articles as uc
+from flask_restx import Resource
 from swagger import init_swagger, articles_ns
-import usecase.articles.send_to_analytics as send_to_analytics
+import send_to_analytics as send_to_analytics
 
 app = Flask(__name__)
 init_swagger(app)

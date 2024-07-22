@@ -32,7 +32,7 @@ def create_parse_handler(cfg):
 
             api_interaction.save_products(cfg.get_db_host(), data)
             api_interaction.send_to_analytics(cfg.get_analytics_host(), data)
-            return {"message": "Success"}, 200
+            return {"data": data}, 200
 
     return ParseHandler
 

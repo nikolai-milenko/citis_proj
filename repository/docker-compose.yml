@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
-    ports:
-      - "5432:5432"
+    network_mode: host
+
   app:
     build: .
     ports:
@@ -16,8 +16,6 @@ services:
     depends_on:
       - postgres
     environment:
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=postgres
-      - DB_HOST=db
+      - DB_URL=postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable
     command: /bin/bash -c "./main --cfg=config/config.yaml"
+    network_mode: host

@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import nltk
-from usecase.blacklist.add_hit import add_hit
+from add_hit import add_hit
 
 nltk.download('punkt')
 

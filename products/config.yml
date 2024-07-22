@@ -6,7 +6,7 @@ marketplaces:
   - lamoda
   - google
 
-max_websites_count: 2  # не рекомендуется выставлять значение больше 10
+max_websites_count: 3  # не рекомендуется выставлять значение больше 10
 max_results_from_website: 5  # максимальное количество товаров, полученное в итоге с одного сайта
 
 headers:
@@ -75,8 +75,8 @@ websites_css_selectors:
       review_comment: 'div.sp-review-body-pros-cons'
   www.holodilnik.ru: []
 
-driverpath: '/home/artyom/prac/venv/lib/python3.8/site-packages/seleniumbase/drivers/chromedriver'
-
+#driverpath: '/home/artyom/prac/venv/lib/python3.8/site-packages/seleniumbase/drivers/chromedriver'
+driverpath: '/usr/local/bin/chromedriver'
 dbhost: 'localhost:8082'
 
 analyticsHost: 'localhost:8083'

@@ -17,7 +17,7 @@ class Config:
         return self.config.get('marketplaces')
 
     def get_max_websites_count(self):
-        return self.config.get('max_websites_count', 2)
+        return self.config.get('max_websites_count', 7)
 
     def get_max_results_from_website(self):
         return self.config.get('max_results_from_website', 5)

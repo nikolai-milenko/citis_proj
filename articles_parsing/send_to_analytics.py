@@ -1,6 +1,6 @@
 import requests
 import json
-from articles_parsing.usecase.blacklist.add_hit import add_hit
+from add_hit import add_hit
 
 
 def send_to_analytics(analytics_host, repo_host, articles):

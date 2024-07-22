@@ -1,5 +1,5 @@
 import requests
-from articles_parsing.links_getter import get_domain_from_url
+from links_getter import get_domain_from_url
 
 
 def add_hit(host, url):

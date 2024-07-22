@@ -16,6 +16,7 @@ import (
 	articles2 "repository/internal/usecase/articles/articles"
 	blacklist2 "repository/internal/usecase/articles/blacklist"
 	"repository/internal/usecase/products/product"
+	"time"
 )
 
 type Implementation struct {
@@ -25,6 +26,7 @@ type Implementation struct {
 func NewImplementation(cfg config.Config) (*Implementation, error) {
 	ctx := context.TODO()
 
+	time.Sleep(time.Second * 2)
 	conn, err := startDBConn(ctx, cfg.Postgres)
 	if err != nil {
 		return nil, err
